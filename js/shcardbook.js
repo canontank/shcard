@@ -146,14 +146,13 @@ function setAccountBook11() {
 	var titleArray = new Array('구분', '횟수', '거래금액', '환급금액');
     var valueArray = new Array();
 	var count = 0;
-    var price = 0;
+    var price = getPrice('');
     var refund = 0;
     for (var data of dataList) {
         if (!isThisMonth(data))
             continue;
 		if (data[3] > 0)
 			count++;
-        price += data[3];
 		refund += data[5];
     }
     valueArray.push(new Array('합계', count, price, refund));
@@ -165,7 +164,7 @@ function setAccountBook12() {
     var cardArray = new Array('댐댐', '팔라고', '원패스', '나마네');
     var valueArray = new Array();
     for (var card of cardArray) {
-        var price = 0;
+        var price = getPrice(card);
         var charge = 0;
         var refund = 0;
         for (var data of dataList) {
@@ -173,7 +172,6 @@ function setAccountBook12() {
                 continue;
             if (card != data[1])
                 continue;
-            price += data[3];
             charge += data[4];
 			refund += data[5];
         }
@@ -185,20 +183,10 @@ function setAccountBook12() {
 function setAccountBook13() {
 	var titleArray = new Array('구분', '거래금액', '손실금액', '손실율');
     var valueArray = new Array();
-    var price = 0;
-    var loss = 0;
-	var lossPer = 0;
-    for (var data of dataList) {
-        if (!isThisMonth(data))
-            continue;
-        price += data[3];
-		loss += (data[4] + data[5]) - data[3];
-    }
-	if (price != 0) {
-		lossPer = -(loss) * 100 / price;
-		lossPer = lossPer.toFixed(2) + "%";
-	}
-    valueArray.push(new Array('합계', price, loss, lossPer));
+    var price = getPrice('');
+    var loss = getLoss('');
+	var lossPer = getLossPer(price, loss);
+	valueArray.push(new Array('합계', price, loss, lossPer));
     setAccountDiv1("#book13", '[ 합계 ]', titleArray, valueArray);
 }
 
@@ -207,24 +195,44 @@ function setAccountBook14() {
     var cardArray = new Array('댐댐', '팔라고', '원패스', '나마네');
     var valueArray = new Array();
     for (var card of cardArray) {
-        var price = 0;
-        var loss = 0;
-		var lossPer = 0;
-        for (var data of dataList) {
-            if (!isThisMonth(data))
-                continue;
-            if (card != data[1])
-                continue;
-            price += data[3];
-			loss += (data[4] + data[5]) - data[3];
-        }
-		if (price != 0) {
-			lossPer = -(loss) * 100 / price;
-			lossPer = lossPer.toFixed(2) + "%";
-		}
+        var price = getPrice(card);
+        var loss = getLoss(card);
+		var lossPer = getLossPer(price, loss);
         valueArray.push(new Array(card, price, loss, lossPer));
     }
     setAccountDiv1("#book14", '[ 손실 ]', titleArray, valueArray);
+}
+
+function getPrice(card) {
+	var price = 0;
+	for (var data of dataList) {
+        if (!isThisMonth(data))
+            continue;
+        if (card != '' && card != data[1])
+            continue;
+        price += data[3];
+	}
+	return price;
+}
+
+function getLoss(card) {
+	var loss = 0;
+	for (var data of dataList) {
+        if (!isThisMonth(data))
+            continue;
+        if (card != '' && card != data[1])
+            continue;
+		loss += (data[4] + data[5]) - data[3];
+    }
+	return loss;
+}
+
+function getLossPer(price, loss) {
+	if (price == 0)
+		return "0%";
+	var lossPer = -(loss) * 100 / price;
+	return lossPer.toFixed(2) + "%";
+	
 }
 
 function setAccountBook2() {
