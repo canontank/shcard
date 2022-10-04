@@ -151,7 +151,7 @@ function setAccountBook11() {
 
 function setAccountBook12() {
 	var titleArray = new Array('구분', '거래금액', '충전금액', '환급금액');
-    var cardArray = new Array('댐댐', '팔라고', '원패스', '나마네');
+    var cardArray = new Array('댐댐', '팔라고', '캐시비', '원패스', '나마네');
     var valueArray = new Array();
     for (var card of cardArray) {
         valueArray.push(new Array(card, getPrice(card), getCharge(card), getRefund(card)));
@@ -171,7 +171,7 @@ function setAccountBook13() {
 
 function setAccountBook14() {
 	var titleArray = new Array('구분', '거래금액', '손실금액', '손실율');
-    var cardArray = new Array('댐댐', '팔라고', '원패스', '나마네');
+    var cardArray = new Array('댐댐', '팔라고', '캐시비', '원패스', '나마네');
     var valueArray = new Array();
     for (var card of cardArray) {
         var price = getPrice(card);
